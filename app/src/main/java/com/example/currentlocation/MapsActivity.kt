@@ -98,11 +98,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                // mMap.addMarker(MarkerOptions().position(LatLng(location?.latitude!!.toDouble(), location?.longitude!!.toDouble())).title("Marker in Current Position"))
 
                 var Userphone = intent.getStringExtra("UserNumber")
-                userRef.orderByChild("phone").equalTo(Userphone.toString()).addValueEventListener(object : ValueEventListener {
+                userRef.child(Userphone.toString()).addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        for (ds in snapshot.children) {
-                            var latitude = ds.child("lat").value.toString()
-                            var longitude = ds.child("long").value.toString()
+                            var latitude = snapshot.child("lat").value.toString()
+                            var longitude = snapshot.child("long").value.toString()
                             var userLocation = "${latitude},${longitude}"
 
                             ServiceBuilder.makeRetrofitService().getGoogleDirections(currentLocation, userLocation, "AIzaSyDFTBnzxyAXbNWiOW5LKmDJr7flZPTCXfs")
@@ -123,7 +122,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                             Toast.makeText(applicationContext, t.message.toString(), Toast.LENGTH_SHORT).show()
                                         }
                                     })
-                        }
                     }
                         override fun onCancelled(error: DatabaseError) {
                             TODO("Not yet implemented")
